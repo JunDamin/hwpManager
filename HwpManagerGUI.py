@@ -1,13 +1,16 @@
 import PySimpleGUI as sg
-from Model import getHwpFileAddress, hwpMerger
+from Model import getHwpFileAddress, MergeHwp, MergeSection
 
 
 sg.change_look_and_feel("TanBlue")
 
 
 layout = [
-    [sg.InputText(), sg.FolderBrowse(button_text="데이터선택")],
-    [sg.Checkbox("하위폴더 포함", size=(10, 1), default=True),],
+    [sg.InputText(), sg.FolderBrowse(button_text="병합폴더선택")],
+    [
+        sg.Checkbox("하위폴더 포함", size=(10, 1), default=True),
+        sg.Checkbox("구역병합", size=(10, 1), default=True),
+    ],
     [sg.Output(size=(100, 30))],
     [
         sg.Button(button_text="병합하기", key="OK"),
@@ -27,8 +30,8 @@ while True:
         if values[1]:
             fileList = getHwpFileAddress(values[0])
         else:
-            fileList = os.listdir(values[0])
+            fileList = os.listdir(values[0)
 
-        hwpMerger(fileList)
+        hwpapi = MergeHwp(fileList, values[2])
 
 window.close()
