@@ -2,23 +2,16 @@ import os
 from hwp_api_class import HwpApi
 
 
-def getHwpFileAddress(path, neglect_key="_"):
+def getHwpFileAddress(path, neglect_keys=["_", "."]):
 
     """ """
 
     hwpAddressList = []
 
-    for walk_i in os.walk(path):
-
-        if os.path.basename(walk_i[0])[0] == neglect_key:
-            pass
-        else:
-            hwpList = [
-                os.path.join(walk_i[0], file)
-                for file in walk_i[2]
-                if file[-3:] == "hwp"
-            ]
-            hwpAddressList.extend(hwpList)
+    for root, dirs, files in os.walk(path):
+        [dirs.remove(d) for d in list(dirs) if d[0] in neglect_keys]
+        hwpList = [os.path.join(root, file) for file in files if file[-3:] == "hwp"]
+        hwpAddressList.extend(hwpList)
 
     return hwpAddressList
 
