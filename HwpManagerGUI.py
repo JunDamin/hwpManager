@@ -18,7 +18,7 @@ layout = [
     ],
 ]
 
-window = sg.Window("HWP Manager v.0.1", icon="icon\\email.ico", layout=layout)
+window = sg.Window("HWP Manager v.0.2", icon="icon\\email.ico", layout=layout)
 
 
 openText = """
@@ -51,10 +51,7 @@ while True:
         break
 
     if event == "OK":
-        if values[1]:
-            fileList = getHwpFileAddress(values[0])
-        else:
-            fileList = os.listdir(values[0])
+        fileList = getHwpFileAddress(path=values[0], sub_folder=values[1])
 
         hwpapi = MergeHwp(fileList, values[2])
 
