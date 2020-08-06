@@ -1,22 +1,41 @@
 import PySimpleGUI as sg
 from Model import getHwpFileAddress, MergeHwp, MergeSection
+from manager import process
 
 
 sg.change_look_and_feel("TanBlue")
 
-
-layout = [
-    [sg.InputText(), sg.FolderBrowse(button_text="병합폴더선택")],
+merge_layout = [
+    [sg.InputText(size=(70, 1)), sg.FolderBrowse(button_text="병합폴더선택", size=(20, 1))],
     [
         sg.Checkbox("하위폴더 포함", size=(10, 1), default=True),
         sg.Checkbox("구역병합", size=(10, 1), default=False),
     ],
+    [sg.Button(button_text="병합하기", key="Merge"),],
+]
+
+split_layout = [
+    [sg.InputText(size=(70, 1)), sg.FileBrowse(button_text="분리파일선택", size=(20, 1))],
+    [sg.Button(button_text="분리하기", key="Split"),],
+]
+
+
+layout = [
     [sg.Output(size=(100, 30))],
     [
-        sg.Button(button_text="병합하기", key="OK"),
-        sg.Button(button_text="종료", key="Cancel"),
+        sg.TabGroup(
+            [
+                [
+                    sg.Tab("Merge HWPs", merge_layout, tooltip="tip"),
+                    sg.Tab("Split a HWP", split_layout),
+                ]
+            ],
+            tooltip="TIP2",
+        ),
     ],
+    [sg.Button(button_text="종료", key="Cancel")],
 ]
+
 
 window = sg.Window("HWP Manager v.0.2", icon="icon\\email.ico", layout=layout)
 
@@ -41,7 +60,9 @@ endText = """
 ======================================================================
 """
 
-
+horizontal_bar = """
+======================================================================
+"""
 window.read(timeout=10)
 print(openText)
 
@@ -50,9 +71,13 @@ while True:
     if event in (None, "Cancel"):
         break
 
-    if event == "OK":
-        fileList = getHwpFileAddress(path=values[0], sub_folder=values[1])
-
+    if event == "Merge":
+        fileList = getHwpFileAddress(path=values["병합폴더선택"], sub_folder=values[1])
         hwpapi = MergeHwp(fileList, values[2])
+        print(horizontal_bar)
 
+    if event == "Split":
+        print(horizontal_bar)
+        process(values["분리파일선택"], window)
+        print("분리작업이 종료 되었습니다. ", horizontal_bar)
 window.close()
