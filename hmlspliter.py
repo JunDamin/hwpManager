@@ -48,7 +48,6 @@ def generate_hml(sectionlist, hmltemplate, folder_address):
         output_name = make_outputname(section, number)       #이름 추출해서 넣기
         output_address = os.path.join(folder_address, output_name)
         write_hml(hmltemplate, section, output_address)
-        print(os.path.basename(output_name))
         hml_list.append(output_address)
         hmltemplate = make_hmltemplate(hmltemplate)
     return(hml_list)

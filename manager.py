@@ -12,7 +12,7 @@ def convert_file(file_addr, new_format=".hml"):
     return save_addr
 
 
-def convert_files(file_addr_list, new_format=".hml"):
+def convert_files(file_addr_list, window, new_format=".hml"):
     hwpapi = HwpApi()
     save_addr_list = []
     for file_addr in file_addr_list:
@@ -20,6 +20,8 @@ def convert_files(file_addr_list, new_format=".hml"):
         save_addr = hwpapi.hwpSaveAs(file_addr, new_format)
         save_addr_list.append(save_addr)
         hwpapi.hwpFileClose()
+        print(f"{file_addr} 변환중")
+        window.refresh()
     hwpapi.hwpQuit()
     return save_addr_list
 
@@ -33,11 +35,8 @@ def make_abspath(file_addr):
 
 def process(file_addr, window):
     abs_addr = make_abspath(file_addr)
-    window.refresh()
     hml_addr = convert_file(abs_addr, new_format=".hml")
-    window.refresh()
     hml_list = hs.split_hml(hml_addr)
-    window.refresh()
-    convert_files(hml_list, new_format=".hwp")
+    convert_files(hml_list, window=window, new_format=".hwp")
     for hml in hml_list:
         os.remove(hml)

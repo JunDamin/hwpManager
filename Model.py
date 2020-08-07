@@ -20,6 +20,8 @@ def getHwpFileAddress(path, neglect_keys=["_", "."], sub_folder=False):
 
 def MergeHwp(file_list, mergeSection):
     hwpapi = HwpApi()
+    print(hwpapi.HWPAUTO.Run("ViewOptionCtrlMark"))
+    print(hwpapi.HWPAUTO.Run("ViewOptionParaMark"))
     # 파일 목록 만들기(역순으로 만들어야 끼어 넣기가 순서대로)
     FileList = file_list
     print("\n".join(FileList), "\n")
@@ -31,10 +33,10 @@ def MergeHwp(file_list, mergeSection):
     print('"모두 허용"을 선택하시면 병합이 시작됩니다.')
 
     # 병합하기
-    for i in HwpFileList:
-        ongoing = hwpapi.HwpInsertFileFuction(i)
+    for hwpAddr in HwpFileList:
+        ongoing = hwpapi.HwpInsertFileFuction(hwpAddr)
         print(ongoing)
-    hwpapi.HWPAUTO.Run("Delete")  # 첫페이지(비어 있음) 삭제
+    hwpapi.HWPAUTO.Run("DeleteBack")  # 첫페이지(비어 있음) 삭제
     HwpPageNumber = hwpapi.HWPAUTO.CreateAction("PageNumPos")  # 페이지 번호 넣는 액션 생성
     HwpPageNumberPara = HwpPageNumber.CreateSet()  # 파라미터 세트 생성
     HwpPageNumberPara.SetItem("DrawPos", "BottomCenter")  # 파라미터 지정
@@ -44,8 +46,7 @@ def MergeHwp(file_list, mergeSection):
 
     if mergeSection:
         MergeSection(hwpapi, len(HwpFileList) - 1)
-
-    return hwpapi
+    return len(HwpFileList)
 
 
 def MergeSection(hwpapi, n):

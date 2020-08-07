@@ -26,11 +26,11 @@ layout = [
         sg.TabGroup(
             [
                 [
-                    sg.Tab("Merge HWPs", merge_layout, tooltip="tip"),
-                    sg.Tab("Split a HWP", split_layout),
+                    sg.Tab("Merge HWPs", merge_layout, tooltip="여러 한글파일을 하나로 합칩니다."),
+                    sg.Tab("Split a HWP", split_layout, tooltip="한 한글파일을 구역별로 쪼갭니다."),
                 ]
             ],
-            tooltip="TIP2",
+            tooltip="한글파일을 합치거나 쪼갤 수 있습니다.",
         ),
     ],
     [sg.Button(button_text="종료", key="Cancel")],
@@ -42,8 +42,10 @@ window = sg.Window("HWP Manager v.0.2", icon="icon\\email.ico", layout=layout)
 
 openText = """
 ======================================================================
-폴더를 고르고 병합하기를 클릭하면 한글이 실행되고 외부명령 실행여부를 묻습니다.
+"Merge HWPs"탭에서 폴더를 고르고 병합하기를 클릭하면 한글이 실행되고 외부명령 실행여부를 묻습니다.
 "모두허용"을 선택하시면 한글파일이 병합이 됩니다.
+
+"Split a HWP"탭에서 HWP파일을 선택하고 분리하기를 클릭하면 한글파일이 분리되서 하위 폴더에 생성됩니다.
 
 환경
 1. 아래아한글이 설치되어 있어야 합니다.
@@ -54,11 +56,6 @@ openText = """
 ======================================================================
 """
 
-endText = """
-======================================================================
-{}개 생성 작업이 완료 되었습니다.
-======================================================================
-"""
 
 horizontal_bar = """
 ======================================================================
@@ -73,11 +70,18 @@ while True:
 
     if event == "Merge":
         fileList = getHwpFileAddress(path=values["병합폴더선택"], sub_folder=values[1])
-        hwpapi = MergeHwp(fileList, values[2])
-        print(horizontal_bar)
+        hwp_count = MergeHwp(fileList, values[2])
+        endText = f"""
+======================================================================
+{hwp_count}개 생성 작업이 완료 되었습니다.
+======================================================================
+"""
+        print(endText)
 
     if event == "Split":
         print(horizontal_bar)
+        print("분리를 시작합니다.")
+        window.refresh()
         process(values["분리파일선택"], window)
         print("분리작업이 종료 되었습니다. ", horizontal_bar)
 window.close()
